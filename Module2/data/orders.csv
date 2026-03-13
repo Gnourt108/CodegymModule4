@@ -1,0 +1,11 @@
+orderID,dishIds,status,isPay
+1,1;2;14,DELIVERED,true
+2,3;4;15,DELIVERED,true
+3,5;6;7,SHIPPING,true
+4,8;9,PENDING,false
+5,10;11;12,PENDING,false
+6,13;14;16,DELIVERED,true
+7,17;18,SHIPPING,true
+8,19;20,CANCELLED,false
+9,1;3;5,PENDING,false
+10,2;4;6;8,DELIVERED,true

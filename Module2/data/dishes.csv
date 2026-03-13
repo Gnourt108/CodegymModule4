@@ -1,0 +1,21 @@
+idDish,nameDish,price,quality,isEndow,isDiscount,isBestSeller,discountDeadline
+1,Pho Bo,50000.0,100,false,0.0,true,0
+2,Banh Mi,25000.0,150,true,0.2,true,1735603200000
+3,Com Tam,45000.0,80,false,0.0,false,0
+4,Bun Cha,55000.0,60,true,0.15,true,1735603200000
+5,Hu Tieu,48000.0,70,false,0.0,false,0
+6,Mi Quang,52000.0,50,true,0.1,false,1735603200000
+7,Banh Xeo,40000.0,90,false,0.0,true,0
+8,Cao Lau,58000.0,45,false,0.0,false,0
+9,Goi Cuon,30000.0,120,true,0.25,true,1735603200000
+10,Bun Bo Hue,60000.0,55,false,0.0,false,0
+11,Com Ga,42000.0,85,false,0.0,false,0
+12,Banh Cuon,35000.0,95,true,0.3,false,1735603200000
+13,Che Ba Mau,28000.0,110,false,0.0,false,0
+14,Ca Phe Sua Da,25000.0,200,false,0.0,true,0
+15,Tra Sua Tran Chau,32000.0,180,true,0.15,true,1735603200000
+16,Banh Flan,20000.0,130,false,0.0,false,0
+17,Nem Ran,38000.0,75,false,0.0,true,0
+18,Canh Chua,45000.0,65,false,0.0,false,0
+19,Bo Kho,62000.0,40,true,0.2,false,1735603200000
+20,Xoi Xeo,22000.0,140,false,0.0,false,0

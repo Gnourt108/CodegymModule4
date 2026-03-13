@@ -1,0 +1,6 @@
+idUser,userName,password,phoneNumber,address,isLocked,email,bankAccountNumber,currentRevenue
+1,customer1,123456,0901234567,123 Nguyen Hue,false,customer1@email.com,123456789,5000000.0
+2,customer2,123456,0902345678,456 Le Loi,false,customer2@email.com,234567890,3000000.0
+3,customer3,123456,0903456789,789 Tran Hung Dao,false,customer3@email.com,345678901,2000000.0
+4,customer4,123456,0904567890,321 Hai Ba Trung,false,customer4@email.com,456789012,1500000.0
+5,customer5,123456,0905678901,654 Ba Trieu ,false,customer5@email.com,567890123,1000000.0

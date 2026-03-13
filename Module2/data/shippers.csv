@@ -1,0 +1,6 @@
+idUser,userName,password,phoneNumber,address,isLocked,isBusy,carType
+1,shipper1,123456,0921234567,50 Cong Quynh St,false,false,A01
+2,shipper2,123456,0922345678,60 Nguyen Trai St,false,false,A02
+3,shipper3,123456,0923456789,70 Tran Phu St,false,false,A03
+4,shipper4,123456,0924567890,80 Le Duan St,false,true,A05
+5,shipper5,123456,0925678901,90 Hoang Hoa Tham St,false,false,A06

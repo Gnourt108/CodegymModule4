@@ -1,0 +1,6 @@
+idUser,userName,password,phoneNumber,address,isLocked,hostRestaurant,totalRevenue
+1,restaurant1,123456,0911234567,100 Pasteur,false,Nguyen Van A,15000000.0
+2,restaurant2,123456,0912345678,200 Dien Bien Phu,false,Tran Thi B,12000000.0
+3,restaurant3,123456,0913456789,300 Vo Van Tan,false,Le Van C,10000000.0
+4,restaurant4,123456,0914567890,400 Ly Thuong Kiet,false,Pham Thi D,8000000.0
+5,restaurant5,123456,0915678901,500 Nam Ky Khoi Nghia,false,Hoang Van E,6000000.0
