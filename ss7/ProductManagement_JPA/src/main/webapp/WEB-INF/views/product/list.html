@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách sản phẩm</title>
+  <th:block th:insert="~{layout/layout::library}"/>
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Product Management</h2>
+  <div class="d-flex justify-content-between mb-3">
+    <h5>Danh sách sản phẩm</h5>
+    <a class="btn btn-sm btn-success" href="/products/add">
+      Thêm sản phẩm
+    </a>
+  </div>
+
+  <form action="/products" method="get" class="d-flex mb-3 gap-2">
+    <input type="text"
+           class="form-control"
+           name="keyword"
+           th:value="${keyword}"
+           placeholder="Tìm kiếm theo tên sản phẩm...">
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a th:href="@{/products}" class="btn btn-outline-secondary">Reset</a>
+  </form>
+
+  <div th:if="${mess}" class="alert alert-info alert-dismissible fade show">
+    <span th:text="${mess}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <table class="table table-bordered table-hover shadow-sm bg-white">
+    <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Product name</th>
+      <th>Price</th>
+      <th>Type</th>
+      <th>Created date</th>
+      <th class="text-center">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr th:each="p : ${products}">
+        <td th:text="${p.getId()}"></td>
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.price}"></td>
+        <td th:text="${p.type}"></td>
+        <td th:text="${#dates.format(p.createdAt, 'dd/MM/yyyy')}"></td>
+        <td class="text-center">
+          <a th:href="@{/products/detail(id=${p.getId()})}" class="btn btn-sm btn-info text-white">Detail</a>
+          <a th:href="@{/products/edit/{id}(id=${p.getId()})}" class="btn btn-sm btn-warning">Edit</a>
+          <button class="btn btn-sm btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  th:data-id="${p.id}"
+                  th:data-name="${p.name}"
+                  onclick="getInfoDelete(this)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="/products/delete" method="post">
+      <input type="hidden" name="action" value="delete">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input hidden="hidden" name="deleteId" id="deleteId">
+          <span>Bạn có muốn xoá sản phẩm </span><span class="text-danger" id="deleteName"></span> không?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-primary">Chấp nhận xoá</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  function getInfoDelete(button){
+    const id = button.getAttribute("data-id");
+    const name = button.getAttribute("data-name");
+
+    document.getElementById("deleteId").value = id;
+    document.getElementById("deleteName").innerText = name;
+  }
+</script>
+</body>
+</html>
