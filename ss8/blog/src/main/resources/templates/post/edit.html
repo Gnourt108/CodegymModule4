@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Post</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+
+        <div class="card-header bg-warning text-white">
+            <h4>Edit Post</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form th:action="@{/posts/edit}" method="post" th:object="${post}">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" th:field="*{title}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-control" rows="5" th:field="*{content}"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Author</label>
+                    <select class="form-select" th:field="*{authors.id}">
+                        <option th:each="a : ${authors}"
+                                th:value="${a.id}"
+                                th:text="${a.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" th:field="*{categories.id}">
+                        <option th:each="c : ${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a th:href="@{/posts}" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-success">Update</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

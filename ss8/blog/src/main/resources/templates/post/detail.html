@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Detail</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-header bg-dark text-white rounded-top-4">
+            <h4 class="mb-0" th:text="${post.title}"></h4>
+        </div>
+
+        <div class="card-body p-4">
+
+            <div class="mb-3 row">
+                <label class="col-sm-3 fw-bold">Post ID</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" th:value="${post.id}" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-3 fw-bold">Author</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           th:value="${post.authors.name}" readonly>
+                </div>
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="mb-3 row">
+                <label class="col-sm-3 fw-bold">Category</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           th:value="${post.categories.name}" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="fw-bold">Content</label>
+                <textarea class="form-control" rows="5"
+                          th:text="${post.content}" readonly></textarea>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-3 fw-bold">Created At</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           th:value="${post.createdAt != null ? #temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm') : ''}"
+                           readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-3 fw-bold">Updated At</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           th:value="${post.updatedAt != null ? #temporals.format(post.updatedAt, 'dd/MM/yyyy HH:mm') : ''}"
+                           readonly>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a th:href="@{/posts}" class="btn btn-secondary">
+                    Back
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

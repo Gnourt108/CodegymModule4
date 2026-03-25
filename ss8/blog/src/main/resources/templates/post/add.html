@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Post</title>
+    <th:block th:insert="~{layout/layout::library}"/>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-header bg-dark text-white rounded-top-4">
+            <h4 class="mb-0">📝 Create New Blog</h4>
+        </div>
+
+        <div class="card-body p-4">
+            <form action="/posts/add" method="post" th:object="${post}">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Title</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{title}"
+                           placeholder="Enter blog title"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Content</label>
+                    <textarea class="form-control"
+                              rows="5"
+                              th:field="*{content}"
+                              placeholder="Write your blog..."
+                              required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Author</label>
+                    <select class="form-select" th:field="*{authors}">
+                        <option value="">-- Select Author --</option>
+                        <option th:each="a : ${authors}"
+                                th:value="${a.id}"
+                                th:text="${a.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Category</label>
+                    <select class="form-select" th:field="*{categories}">
+                        <option value="">-- Select Category --</option>
+                        <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+
+                    <a th:href="@{/posts}" class="btn btn-outline-secondary">
+                        Back
+                    </a>
+
+                    <button type="submit" class="btn btn-success px-4">
+                        Save Post
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
