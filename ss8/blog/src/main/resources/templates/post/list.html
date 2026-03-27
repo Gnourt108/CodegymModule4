@@ -16,58 +16,101 @@
   </div>
 
   <form action="/posts" method="get" class="d-flex mb-3 gap-2">
-    <input type="text"
-           class="form-control"
-           name="keyword"
-           th:value="${keyword}"
-           placeholder="Tìm kiếm theo tiêu đề blog...">
-    <button type="submit" class="btn btn-primary">Search</button>
-    <a th:href="@{/posts}" class="btn btn-outline-secondary">Reset</a>
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label small">Từ khóa (Tiêu đề / Nội dung)</label>
+        <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm...">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">Từ ngày</label>
+        <input type="date" class="form-control" name="fromDate" th:value="${fromDate}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">Đến ngày</label>
+        <input type="date" class="form-control" name="toDate" th:value="${toDate}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">Tìm</label>
+        <button type="submit" class="btn btn-primary">Tìm</button>
+      </div>
+    </div>
   </form>
 
-<!--  <div th:if="${mess}" class="alert alert-info alert-dismissible fade show">-->
-<!--    <span th:text="${mess}"></span>-->
-<!--    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
-<!--  </div>-->
+  <div class="mb-3 d-flex flex-wrap gap-2 align-items-center">
+     <span class="fw-semibold">Lọc category:</span>
+    <a th:href="@{/posts(keyword=${keyword}, fromDate=${fromDate}, toDate = ${toDate})}"
+      th:classappend="${categoryId == null} ? 'btn-dark' : 'btn-outline-dark'" class="btn btn-sm">Tất cả</a>
+    <a th:each="cat : ${categories}"
+      th:href="@{/posts(keyword=${keyword}, categoryId=${cat.id}, fromDate = ${fromDate}, toDate = ${toDate})}"
+      th:text="${cat.name}"
+      th:classappend="${categoryId == cat.id} ? 'btn-primary' : 'btn-outline-primary'"
+      class="btn btn-sm"></a>
+  </div>
 
-  <table class="table table-bordered table-hover shadow-sm bg-white">
-    <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>Title</th>
-      <th>Content</th>
-      <th>Category</th>
-      <th>Created At</th>
-      <th>Updated At</th>
-      <th>Author</th>
-      <th class="text-center">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-      <tr th:each="p : ${posts}">
-        <td th:text="${p.getId()}"></td>
-        <td th:text="${p.title}"></td>
-        <td th:text="${p.content}"></td>
-        <td th:text="${p.categories.name}"></td>
-        <td th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy')}"></td>
-        <td th:text="${#temporals.format(p.updatedAt, 'dd/MM/yyyy')}"></td>
-        <td th:text="${p.authors.name}"></td>
-        <td class="text-center">
-          <a th:href="@{/posts/detail(id=${p.getId()})}" class="btn btn-sm btn-info text-white">Detail</a>
-          <a th:href="@{/posts/edit/{id}(id=${p.getId()})}" class="btn btn-sm btn-warning">Edit</a>
-          <button class="btn btn-sm btn-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
-                  th:data-id="${p.id}"
-                  th:data-name="${p.title}"
-                  onclick="getInfoDelete(this)">
-            Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div th:if="${mess}" class="alert alert-info alert-dismissible fade show">
+    <span th:text="${mess}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-6 col-ld-4" th:each="p : ${postsPage}">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title fw-bold" th:text="${p.title}"></h5>
+          <span class="badge bg-primary mb-2" th:text="${p.categories.name}"></span>
+          <p class="card-text text-muted" th:text="${#strings.abbreviate(p.content, 100)}"></p>
+          <div class="small text-secondary mt-auto">
+            <p class="mb-1">
+              <strong>Author:</strong>
+              <span th:text="${p.authors.name}"></span>
+            </p>
+            <p class="mb-1">
+              <strong>Created:</strong>
+              <span th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy')}"></span>
+            </p>
+            <p class="mb-2">
+              <strong>Updated:</strong>
+              <span th:text="${#temporals.format(p.updatedAt, 'dd/MM/yyyy')}"></span>
+            </p>
+          </div>
+          <div class="d-flex justify-content-between mt-3">
+            <a th:href="@{/posts/detail(id=${p.getId()})}" class="btn btn-sm btn-info btn-warning text-white">Detail</a>
+            <a th:href="@{/posts/edit/{id}(id=${p.getId()})}" class="btn btn-sm btn-warning">Edit</a>
+            <button class="btn btn-sm btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    th:data-id="${p.id}"
+                    th:data-name="${p.title}"
+                    onclick="getInfoDelete(this)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4">
+    <a th:if="${postsPage.hasPrevious()}"
+       class="btn btn-sm btn-primary"
+       th:href="@{/posts(page=${postsPage.number - 1},
+                    keyword=${keyword},
+                    categoryId=${categoryId},
+                    fromDate=${fromDate},
+                    toDate=${toDate})}">
+      Previous
+    </a>
+    <span th:text="${postsPage.number + 1}"></span>/<span th:text="${postsPage.totalPages}"></span>
+    <a th:if="${postsPage.hasNext()}"
+       class="btn btn-sm btn-primary"
+       th:href="@{/posts(page=${postsPage.number + 1},
+                    keyword=${keyword},
+                    categoryId=${categoryId},
+                    fromDate=${fromDate},
+                    toDate=${toDate})}">
+      Next
+    </a>
+  </div>
 </div>
+
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
