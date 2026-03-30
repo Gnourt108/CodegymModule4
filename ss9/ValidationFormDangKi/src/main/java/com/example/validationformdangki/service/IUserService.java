@@ -1,4 +1,10 @@
 package com.example.validationformdangki.service;
 
-public class IUserService {
+import com.example.validationformdangki.entity.User;
+
+import java.util.List;
+
+public interface IUserService {
+    void save(User user);
+    List<User> findAll();
 }
