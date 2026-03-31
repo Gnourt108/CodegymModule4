@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Thêm Sách</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #667eea, #764ba2); min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; }
+        .card { border: none; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .card-header { background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 16px 16px 0 0 !important; padding: 24px; }
+        .input-group-text { background: #f8f9fa; border-right: none; }
+        .form-control { border-left: none; }
+        .form-control.is-invalid { border-left: none; }
+        .btn-submit { background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none; border-radius: 8px; padding: 12px; font-weight: 600; }
+    </style>
 </head>
 <body>
-$END$
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-white text-center">
+                    <i class="bi bi-book-half fs-1"></i>
+                    <h5 class="fw-bold mt-2 mb-0">Thêm Sách Mới</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/books/add}" th:object="${bookDto}"
+                          method="post" novalidate>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-book text-primary me-1"></i>Tên Sách
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-book"></i></span>
+                                <input type="text" class="form-control"
+                                       th:field="*{title}"
+                                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"
+                                       placeholder="Nhập tên sách..."/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('title')}"
+                                     th:errors="*{title}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-person text-primary me-1"></i>Tác Giả
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control"
+                                       th:field="*{author}"
+                                       th:classappend="${#fields.hasErrors('author')} ? 'is-invalid' : ''"
+                                       placeholder="Nhập tên tác giả..."/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('author')}"
+                                     th:errors="*{author}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-stack text-primary me-1"></i>Số Lượng
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-123"></i></span>
+                                <input type="number" class="form-control"
+                                       th:field="*{quantity}"
+                                       th:classappend="${#fields.hasErrors('quantity')} ? 'is-invalid' : ''"
+                                       placeholder="Nhập số lượng..." min="0"/>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('quantity')}"
+                                     th:errors="*{quantity}"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-submit text-white">
+                                <i class="bi bi-plus-circle me-2"></i>Thêm Sách
+                            </button>
+                            <a href="/" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Quay Lại
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
