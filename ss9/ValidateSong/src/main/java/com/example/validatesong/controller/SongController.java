@@ -1,7 +1,9 @@
 package com.example.validatesong.controller;
 
+import com.example.validatesong.dto.SongDto;
 import com.example.validatesong.entity.Song;
 import com.example.validatesong.service.SongService;
+import com.example.validatesong.validation.SongValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,15 +25,24 @@ public class SongController {
 
     @GetMapping("/add")
     public String showAdd(Model model){
-        model.addAttribute("song", new Song());
+        model.addAttribute("songDto", new SongDto());
         return "add";
     }
 
     @PostMapping("/add")
-    public String addSong(@Valid @ModelAttribute("song")Song song, BindingResult bindingResult){
+    public String addSong(@Valid @ModelAttribute("songDto")SongDto songDto, BindingResult bindingResult){
+
+        SongValidation songValidation = new SongValidation();
+        songValidation.validate(songDto, bindingResult);
+
         if(bindingResult.hasErrors()){
             return "add";
         }
+
+        Song song = new Song();
+        song.setTitle(songDto.getTitle());
+        song.setArtist(songDto.getArtist());
+        song.setGenre(songDto.getGenre());
         songService.save(song);
         return "redirect:/songs";
     }
@@ -39,18 +50,32 @@ public class SongController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model){
         Song song = songService.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy bài hát"));
-        model.addAttribute("song", song);
+        SongDto songDto = new SongDto();
+        songDto.setTitle(song.getTitle());
+        songDto.setArtist(song.getArtist());
+        songDto.setGenre(song.getGenre());
+
+        model.addAttribute("songDto", songDto);
+        model.addAttribute("songId", song.getId());
         return "edit";
     }
 
     @PostMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id,
-                           @Valid @ModelAttribute("song")Song song,
+                           @Valid @ModelAttribute("songDto")SongDto songDto,
                            BindingResult bindingResult){
+        SongValidation validation = new SongValidation();
+        validation.validate(songDto, bindingResult);
+
         if(bindingResult.hasErrors()){
             return "edit";
         }
-        song.setId(id);
+
+        Song song = songService.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy bài hát"));
+
+        song.setTitle(songDto.getTitle());
+        song.setArtist(songDto.getArtist());
+        song.setGenre(songDto.getGenre());
         songService.save(song);
         return "redirect:/songs";
     }
