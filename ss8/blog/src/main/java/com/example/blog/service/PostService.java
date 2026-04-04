@@ -15,6 +15,7 @@ import java.util.List;
 public class PostService implements IPostService {
     @Autowired
     private IPostRepository postRepository;
+
     @Override
     public List<Post> findAll() {
         return postRepository.findAll();
@@ -33,6 +34,11 @@ public class PostService implements IPostService {
     @Override
     public Post findPostById(int id) {
         return postRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Post> findPostsByCategoryId(int id) {
+        return postRepository.findPostsBy(id);
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface IPostService {
     List<Post> findAll();
     void addPost(Post post);
     void deletePost(int id);
-//    void updateProduct(Product product);
     Post findPostById(int id);
+    List<Post> findPostsByCategoryId(int id);
     Page<Post> searchPosts(String keyword, Integer categoryId, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
 }

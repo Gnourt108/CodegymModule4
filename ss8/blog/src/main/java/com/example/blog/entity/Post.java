@@ -1,5 +1,6 @@
 package com.example.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +27,12 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonIgnoreProperties({"posts"})
     private Author authors;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties({"posts"})
     private Category categories;
 
     @PrePersist

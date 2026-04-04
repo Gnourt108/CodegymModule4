@@ -1,7 +1,5 @@
 package com.example.blog.controller;
 
-
-import com.example.blog.entity.Category;
 import com.example.blog.entity.Post;
 import com.example.blog.service.AuthorService;
 import com.example.blog.service.CategoryService;
@@ -19,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("/posts")

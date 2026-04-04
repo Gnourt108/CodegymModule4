@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface IPostRepository extends JpaRepository<Post, Integer> {
 
@@ -16,4 +17,6 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findByTitleContainingIgnoreCaseAndCreatedAtBetween(
             String keyword, LocalDateTime fromDate, LocalDateTime toDate,
             Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.categories.id = :id")
+    List<Post> findPostsBy(@Param("id") int id);
 }
