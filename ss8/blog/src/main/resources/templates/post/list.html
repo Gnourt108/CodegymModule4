@@ -10,111 +10,76 @@
   <h2 class="text-center mb-4">Post Management</h2>
   <div class="d-flex justify-content-between mb-3">
     <h5>Danh sách bài viết</h5>
-    <a class="btn btn-sm btn-success" href="/posts/add">
-      Thêm sản phẩm
-    </a>
+    <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+            data-bs-target="#addModal">Thêm bài viết</button>
   </div>
 
   <form action="/posts" method="get" class="d-flex mb-3 gap-2">
     <div class="row g-2 align-items-end">
-      <div class="col-md-3">
-        <label class="form-label small">Từ khóa (Tiêu đề / Nội dung)</label>
-        <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm...">
+      <!-- Cột Keyword -->
+      <div class="col-md-2">
+        <label class="form-label small">Từ khóa</label>
+        <input type="text" class="form-control" name="keyword" id="searchInput" placeholder="Nhập từ khóa...">
       </div>
+      <!-- Cột Lọc Category -->
       <div class="col-md-3">
+        <label class="form-label small">Danh mục (Category)</label>
+        <select class="form-select" id="categoryInput">
+          <option value="">Tất cả danh mục</option>
+          <option th:each="cat : ${categories}"
+                  th:value="${cat.id}"
+                  th:text="${cat.name}"></option>
+        </select>
+      </div>
+      <!-- Cột Từ ngày -->
+      <div class="col-md-2">
         <label class="form-label small">Từ ngày</label>
-        <input type="date" class="form-control" name="fromDate" th:value="${fromDate}">
+        <input type="date" class="form-control" id="fromDateInput">
       </div>
-      <div class="col-md-3">
+      <!-- Cột Đến ngày -->
+      <div class="col-md-2">
         <label class="form-label small">Đến ngày</label>
-        <input type="date" class="form-control" name="toDate" th:value="${toDate}">
+        <input type="date" class="form-control" id="toDateInput">
       </div>
-      <div class="col-md-3">
-        <label class="form-label small">Tìm</label>
-        <button type="submit" class="btn btn-primary">Tìm</button>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-primary" id="btnSearch">Tìm</button>
       </div>
     </div>
   </form>
 
-  <div class="mb-3 d-flex flex-wrap gap-2 align-items-center">
-     <span class="fw-semibold">Lọc category:</span>
-    <a th:href="@{/posts(keyword=${keyword}, fromDate=${fromDate}, toDate = ${toDate})}"
-      th:classappend="${categoryId == null} ? 'btn-dark' : 'btn-outline-dark'" class="btn btn-sm">Tất cả</a>
-    <a th:each="cat : ${categories}"
-      th:href="@{/posts(keyword=${keyword}, categoryId=${cat.id}, fromDate = ${fromDate}, toDate = ${toDate})}"
-      th:text="${cat.name}"
-      th:classappend="${categoryId == cat.id} ? 'btn-primary' : 'btn-outline-primary'"
-      class="btn btn-sm"></a>
-  </div>
+
+  <!--  <div class="mb-3 d-flex flex-wrap gap-2 align-items-center">-->
+  <!--     <span class="fw-semibold">Lọc category:</span>-->
+  <!--    <a th:href="@{/posts(keyword=${keyword}, fromDate=${fromDate}, toDate = ${toDate})}"-->
+  <!--      th:classappend="${categoryId == null} ? 'btn-dark' : 'btn-outline-dark'" class="btn btn-sm">Tất cả</a>-->
+  <!--    <a th:each="cat : ${categories}"-->
+  <!--      th:href="@{/posts(keyword=${keyword}, categoryId=${cat.id}, fromDate = ${fromDate}, toDate = ${toDate})}"-->
+  <!--      th:text="${cat.name}"-->
+  <!--      th:classappend="${categoryId == cat.id} ? 'btn-primary' : 'btn-outline-primary'"-->
+  <!--      class="btn btn-sm"></a>-->
+  <!--  </div>-->
 
   <div th:if="${mess}" class="alert alert-info alert-dismissible fade show">
     <span th:text="${mess}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
-  <div class="row g-4">
-    <div class="col-md-6 col-ld-4" th:each="p : ${postsPage}">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold" th:text="${p.title}"></h5>
-          <span class="badge bg-primary mb-2" th:text="${p.categories.name}"></span>
-          <p class="card-text text-muted" th:text="${#strings.abbreviate(p.content, 100)}"></p>
-          <div class="small text-secondary mt-auto">
-            <p class="mb-1">
-              <strong>Author:</strong>
-              <span th:text="${p.authors.name}"></span>
-            </p>
-            <p class="mb-1">
-              <strong>Created:</strong>
-              <span th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy')}"></span>
-            </p>
-            <p class="mb-2">
-              <strong>Updated:</strong>
-              <span th:text="${#temporals.format(p.updatedAt, 'dd/MM/yyyy')}"></span>
-            </p>
-          </div>
-          <div class="d-flex justify-content-between mt-3">
-            <a th:href="@{/posts/detail(id=${p.getId()})}" class="btn btn-sm btn-info btn-warning text-white">Detail</a>
-            <a th:href="@{/posts/edit/{id}(id=${p.getId()})}" class="btn btn-sm btn-warning">Edit</a>
-            <button class="btn btn-sm btn-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    th:data-id="${p.id}"
-                    th:data-name="${p.title}"
-                    onclick="getInfoDelete(this)">
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="row g-4" id="postContainer">
   </div>
-  <div class="mt-4">
-    <a th:if="${postsPage.hasPrevious()}"
-       class="btn btn-sm btn-primary"
-       th:href="@{/posts(page=${postsPage.number - 1},
-                    keyword=${keyword},
-                    categoryId=${categoryId},
-                    fromDate=${fromDate},
-                    toDate=${toDate})}">
-      Previous
-    </a>
-    <span th:text="${postsPage.number + 1}"></span>/<span th:text="${postsPage.totalPages}"></span>
-    <a th:if="${postsPage.hasNext()}"
-       class="btn btn-sm btn-primary"
-       th:href="@{/posts(page=${postsPage.number + 1},
-                    keyword=${keyword},
-                    categoryId=${categoryId},
-                    fromDate=${fromDate},
-                    toDate=${toDate})}">
-      Next
-    </a>
+
+  <div class="text-center mt-4">
+    <button id="btnLoadMore" class="btn btn-outline-primary px-5">
+      Tải thêm
+    </button>
+    <p id="noMorePost" class="text-muted mt-2" style="display:none">
+      Đã hiển thị hết bài viết.
+    </p>
   </div>
 </div>
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form action="/posts/delete" method="post">
+    <form method="post">
       <input type="hidden" name="action" value="delete">
       <div class="modal-content">
         <div class="modal-header">
@@ -127,19 +92,352 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-          <button type="submit" class="btn btn-primary">Chấp nhận xoá</button>
+          <button type="button" class="btn btn-danger" id="btnConfirmDelete">
+            Chấp nhận xoá
+          </button>
         </div>
       </div>
     </form>
   </div>
 </div>
-<script>
-  function getInfoDelete(button){
-    const id = button.getAttribute("data-id");
-    const title = button.getAttribute("data-name");
 
+<!-- Modal Edit -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title">Chỉnh sửa bài viết</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editId">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" id="editTitle">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Content</label>
+          <textarea class="form-control" rows="4" id="editContent"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Author</label>
+          <select class="form-select" id="editAuthor">
+            <option th:each="a : ${authors}"
+                    th:value="${a.id}"
+                    th:text="${a.name}">
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="editCategory">
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}">
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+        <button type="button" class="btn btn-warning" id="btnConfirmEdit">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Thêm bài viết mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" id="addTitle"
+                 placeholder="Nhập tiêu đề...">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Content</label>
+          <textarea class="form-control" rows="4" id="addContent"
+                    placeholder="Nhập nội dung..."></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Author</label>
+          <select class="form-select" id="addAuthor">
+            <option value="">-- Chọn tác giả --</option>
+            <option th:each="a : ${authors}"
+                    th:value="${a.id}"
+                    th:text="${a.name}">
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="addCategory">
+            <option value="">-- Chọn danh mục --</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}">
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal">Huỷ</button>
+        <button type="button" class="btn btn-success"
+                id="btnConfirmAdd">Thêm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  let currentPage = 0;
+  const PAGE_SIZE = 3;
+
+  $(document).ready(function(){
+    loadPosts(0);
+  });
+
+  $("#btnSearch").on("click",function (){
+    const keyword = $("#searchInput").val();
+    const fromDate = $("#fromDateInput").val();
+    const toDate = $("#toDateInput").val();
+    const categoryId = $("#categoryInput").val();
+    searchPosts(keyword, categoryId, fromDate, toDate);
+  })
+
+  $("#searchInput").on("keypress", function(e){
+    if(e.key === "Enter"){
+      const keyword    = $(this).val();
+      const categoryId = $("#categoryInput").val();
+      const fromDate   = $("#fromDateInput").val();
+      const toDate     = $("#toDateInput").val();
+      searchPosts(keyword, categoryId, fromDate, toDate);
+    }
+  })
+
+  $("#btnLoadMore").on("click", function (){
+    currentPage++;
+    loadPosts(currentPage);
+  })
+
+  function loadPosts(page){
+    $.ajax({
+      url: "/api/v1/posts/paged",
+      method:"GET",
+      data : {page : page, size : PAGE_SIZE},
+      dataType:"json",
+      success:function (data){
+        appendPosts(data.content);
+        if(data.last){
+          $('#btnLoadMore').hide();
+          $('#noMorePost').show();
+        }
+      },
+      error:function (){
+        alert("Có lỗi xảy ra!");
+      }
+    })
+  }
+
+  function searchPosts(keyword, categoryId, fromDate, toDate){
+    const params = {keyword : keyword};
+    if(categoryId){
+      params.categoryId = categoryId;
+    }
+    if(fromDate){
+      params.fromDate = fromDate;
+    }
+    if(toDate){
+      params.toDate = toDate;
+    }
+    $.ajax({
+      url:"/api/v1/posts/search",
+      method:"GET",
+      data: params,
+      dataType:"json",
+      success:function (posts){
+        displayPosts(posts)
+      },
+      error:function(){
+        alert("Có lỗi xảy ra, vui lòng thử lại!")
+      }
+    });
+  }
+
+  function displayPosts(posts){
+    const container = $("#postContainer");
+    container.empty();
+    appendPosts(posts);
+  }
+
+  function appendPosts(posts) {
+    const container = $("#postContainer");
+
+    if (posts.length === 0) {
+      container.html('<p class="text-muted">Không tìm thấy bài viết nào.</p>');
+      return;
+    }
+
+    posts.forEach(function (p) {
+      const card = `
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold">${p.title}</h5>
+              <span class="badge bg-primary mb-2">${p.categories.name}</span>
+              <p class="card-text text-muted">${p.content.substring(0, 100)}...</p>
+              <div class="small text-secondary mt-auto">
+                <p class="mb-1"><strong>Author:</strong> ${p.authors.name}</p>
+                <p class="mb-1"><strong>Created:</strong> ${p.createdAt}</p>
+              </div>
+              <div class="d-flex justify-content-between mt-3">
+                 <a href="/posts/detail?id=${p.id}" class="btn btn-sm btn-info text-white">Detail</a>
+                <button class="btn btn-sm btn-warning"
+                        onclick="openEditModal(${p.id})">Edit</button>
+
+                <button class="btn btn-sm btn-danger"
+                        onclick="confirmDelete(${p.id}, '${p.title}')">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      container.append(card);
+    });
+  }
+
+
+  function openEditModal(id) {
+    $.ajax({
+      url: "/api/v1/posts/" + id,
+      method: "GET",
+      dataType: "json",
+      success: function (post) {
+        // Đổ dữ liệu vào modal
+        $("#editId").val(post.id);
+        $("#editTitle").val(post.title);
+        $("#editContent").val(post.content);
+        $("#editCategory").val(post.categories.id);
+        $("#editAuthor").val(post.authors.id);
+
+        // Mở modal
+        new bootstrap.Modal(document.getElementById("editModal")).show();
+      },
+      error: function () {
+        alert("Không thể tải thông tin bài viết!");
+      }
+    });
+  }
+
+  $("#btnConfirmEdit").on("click", function () {
+    const id         = $("#editId").val();
+    const categoryId = $("#editCategory").val();
+    const authorId   = $("#editAuthor").val();
+
+    const postData = {
+      title:      $("#editTitle").val(),
+      content:    $("#editContent").val(),
+      categories: { id: parseInt(categoryId) },
+      authors:    { id: parseInt(authorId) }
+    };
+
+    $.ajax({
+      url: "/api/v1/posts/" + id,
+      method: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify(postData),
+      dataType: "json",
+      success: function () {
+        bootstrap.Modal.getInstance(document.getElementById("editModal")).hide();
+        currentPage = 0;
+        $("#postContainer").empty();
+        $("#btnLoadMore").show();
+        $("#noMorePost").hide();
+        loadPosts(0);
+      },
+      error: function () {
+        alert("Cập nhật thất bại!");
+      }
+    });
+  });
+
+
+  function confirmDelete(id, title) {
     document.getElementById("deleteId").value = id;
     document.getElementById("deleteName").innerText = title;
+    new bootstrap.Modal(document.getElementById("exampleModal")).show();
+  }
+
+  $("#btnConfirmDelete").on("click", function () {
+    const id = $("#deleteId").val();
+
+    $.ajax({
+      url: "/api/v1/posts/" + id,
+      method: "DELETE",
+      success: function () {
+        bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide();
+        currentPage = 0;
+        $("#postContainer").empty();
+        $("#btnLoadMore").show();
+        $("#noMorePost").hide();
+        loadPosts(0);
+      },
+      error: function () {
+        alert("Xóa thất bại!");
+      }
+    });
+  });
+
+  $("#btnConfirmAdd").on("click", function () {
+    const title      = $("#addTitle").val().trim();
+    const content    = $("#addContent").val().trim();
+    const categoryId = $("#addCategory").val();
+    const authorId   = $("#addAuthor").val();
+
+    if (!title || !content || !categoryId || !authorId) {
+      alert("Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+
+    const postData = {
+      title:      title,
+      content:    content,
+      categories: { id: parseInt(categoryId) },
+      authors:    { id: parseInt(authorId) }
+    };
+
+    $.ajax({
+      url:         "/api/v1/posts",
+      method:      "POST",
+      contentType: "application/json",
+      data:        JSON.stringify(postData),
+      dataType:    "json",
+      success: function () {
+        bootstrap.Modal.getInstance(
+                document.getElementById("addModal")).hide();
+        clearAddForm();
+        currentPage = 0;
+        $("#postContainer").empty();
+        $("#btnLoadMore").show();
+        $("#noMorePost").hide();
+        loadPosts(0);
+      },
+      error: function () {
+        alert("Thêm bài viết thất bại!");
+      }
+    });
+  });
+
+  function clearAddForm() {
+    $("#addTitle").val("");
+    $("#addContent").val("");
+    $("#addCategory").val("");
+    $("#addAuthor").val("");
   }
 </script>
 </body>

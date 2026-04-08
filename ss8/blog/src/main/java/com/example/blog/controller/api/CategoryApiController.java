@@ -1,4 +1,4 @@
-package com.example.blog.api;
+package com.example.blog.controller.api;
 
 import com.example.blog.entity.Category;
 import com.example.blog.service.CategoryService;

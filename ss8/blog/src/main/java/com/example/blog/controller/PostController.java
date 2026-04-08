@@ -49,6 +49,7 @@ public class PostController {
         model.addAttribute("fromDate", fromDate);
         model.addAttribute("toDate", toDate);
         model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("authors", authorService.findAll());
         return "post/list";
     }
 
